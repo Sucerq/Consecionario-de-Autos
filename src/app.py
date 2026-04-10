@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from contextlib import asynccontextmanager
 
 # Importar los routers de endpoints
 from src.endpoints.autos import router as autos_router
@@ -11,6 +12,29 @@ from src.endpoints.clientes import router as clientes_router
 from src.endpoints.detalle_ventas import router as detalle_ventas_router
 from src.endpoints.sucursales import router as sucursales_router
 from src.endpoints.usuarios import router as usuarios_router
+
+from fastapi.exceptions import HTTPException, RequestValidationError
+
+from src.core.exceptions import AppException
+from src.core.error_handlers import (
+    app_exception_handler,
+    generic_exception_handler,
+    http_exception_handler,
+    validation_exception_handler,
+)
+
+from src.database.config import create_tables
+from src.endpoints import (
+    usuarios,
+    autos,
+    clientes,
+    compras,
+    detalle_ventas,
+    empleados,
+    mantenimientos,
+    sucursales,
+    ventas,
+)
 
 app = FastAPI(
     title="API Concesionario de Autos",
@@ -27,10 +51,23 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 # Root path
 @app.get("/")
 def read_root():
     return {"message": "Bienvenido a la API del Concesionario de Autos"}
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    create_tables()
+    yield
+
+
+app.add_exception_handler(AppException, app_exception_handler)
+app.add_exception_handler(HTTPException, http_exception_handler)
+app.add_exception_handler(RequestValidationError, validation_exception_handler)
+app.add_exception_handler(Exception, generic_exception_handler)
 
 # Incluir routers
 app.include_router(autos_router)
