@@ -1,0 +1,79 @@
+name: CI/CD Dev Pipeline
+
+on:
+  push:
+    branches:
+      - dev
+  pull_request:
+    branches:
+      - dev
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install flake8 pytest alembic
+
+      - name: Lint with flake8
+        run: |
+          # Falla si hay errores de sintaxis críticos
+          flake8 src/ --count --select=E9,F63,F7,F82 --show-source --statistics
+          # Trata los errores menores de estilo (PEP 8) como advertencias sin tumbar el pipeline (--exit-zero)
+          flake8 src/ --count --exit-zero --max-complexity=10 --max-line-length=120 --statistics
+
+      - name: Run Tests
+        run: |
+          # pytest # Descomenta cuando existan pruebas
+
+      - name: Run Database Migrations (Punto 1.2)
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          if [ -z "$DATABASE_URL" ]; then
+            echo "DATABASE_URL no está configurada, ignorando migración por ahora"
+          else
+            alembic upgrade head
+          fi
+
+      - name: Run Database Seeder (Punto 1.2)
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          if [ -z "$DATABASE_URL" ]; then
+            echo "DATABASE_URL no está configurada, ignorando seeder por ahora"
+          else
+            python src/database/seeder.py
+          fi
+
+      # A continuación se mantienen los pasos de Docker extraídos de tu otra rama
+      - name: Log in to Docker Hub
+        # if: secrets.DOCKERHUB_USERNAME != ''
+        continue-on-error: true
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and Push Docker Image
+        # if: secrets.DOCKERHUB_USERNAME != ''
+        continue-on-error: true
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/concesionario-autos:${{ github.sha }} .
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/concesionario-autos:${{ github.sha }}
