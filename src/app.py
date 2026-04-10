@@ -14,7 +14,7 @@ from src.endpoints.sucursales import router as sucursales_router
 from src.endpoints.usuarios import router as usuarios_router
 
 from fastapi.exceptions import HTTPException, RequestValidationError
-
+from src.core.config import get_settings
 from src.core.exceptions import AppException
 from src.core.error_handlers import (
     app_exception_handler,
@@ -63,6 +63,21 @@ async def lifespan(app: FastAPI):
     create_tables()
     yield
 
+
+app = FastAPI(
+    title="API Banco",
+    description="API con FastAPI, SQLAlchemy y PostgreSQL - Usuarios, Sucursales, Cuentas, Transacciones. Incluye validación de datos, manejo de errores unificado y estructuras de respuesta estándar.",
+    lifespan=lifespan,
+)
+
+_settings = get_settings()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=_settings.cors_origins_list(),
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allow_headers=["Authorization", "Content-Type", "Accept"],
+)
 
 app.add_exception_handler(AppException, app_exception_handler)
 app.add_exception_handler(HTTPException, http_exception_handler)
