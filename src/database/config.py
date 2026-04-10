@@ -10,8 +10,6 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
 
-# Cargar variables de entorno
-load_dotenv()
 
 # Configuración de la base de datos Neon PostgreSQL
 # Obtener la URL completa de conexión desde las variables de entorno
