@@ -12,6 +12,8 @@ from src.endpoints.clientes import router as clientes_router
 from src.endpoints.detalle_ventas import router as detalle_ventas_router
 from src.endpoints.sucursales import router as sucursales_router
 from src.endpoints.usuarios import router as usuarios_router
+from src.endpoints.auth import router as auth_router
+
 
 from fastapi.exceptions import HTTPException, RequestValidationError
 
@@ -45,7 +47,7 @@ app = FastAPI(
 # Configuración básica de CORS (*)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://localhost:4200", "http://127.0.0.1:4200"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -70,6 +72,7 @@ app.add_exception_handler(RequestValidationError, validation_exception_handler)
 app.add_exception_handler(Exception, generic_exception_handler)
 
 # Incluir routers
+app.include_router(auth_router)
 app.include_router(autos_router)
 app.include_router(clientes_router)
 app.include_router(empleados_router)

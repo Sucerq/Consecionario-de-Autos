@@ -1,3 +1,6 @@
+from src.crud.usuario import get_usuario_by_nombre_usuario, crear_usuario, authenticate_usuario
+
+
 from src.crud.sucursal import (
     listar_sucursal,
     obtener_sucursal,
@@ -69,6 +72,8 @@ from src.crud.usuario import (
     actualizar_usuario,
     eliminar_usuario,
 )
+# src/crud/__init__.py
+
 
 __all__ = [
     "listar_sucursal",
