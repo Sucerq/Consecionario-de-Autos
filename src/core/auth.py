@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session
 
 from src.core.config import Settings, get_settings
 from src.database.config import get_db
-from src.entities.Usuario import Usuario
+from src.entities.usuario import Usuario
 
 bearer_scheme = HTTPBearer(auto_error=False)
 
@@ -76,14 +76,14 @@ async def get_current_user(
             detail="Token inválido o expirado",
         ) from None
 
-    user = db.query(Usuario).filter(Usuario.id_usuario == user_id).first()
+    user = db.query(Usuario).filter(Usuario.id_Usuario == user_id).first()
     if not user:
         raise HTTPException(status_code=401, detail="Usuario no encontrado")
     if not user.activo:
         raise HTTPException(status_code=403, detail="Usuario inactivo")
 
     return CurrentUser(
-        id_usuario=user.id_usuario,
+        id_usuario=user.id_Usuario,
         nombre_usuario=user.nombre_usuario,
         rol=user.rol,
     )

@@ -12,6 +12,7 @@ from src.endpoints.clientes import router as clientes_router
 from src.endpoints.detalle_ventas import router as detalle_ventas_router
 from src.endpoints.sucursales import router as sucursales_router
 from src.endpoints.usuarios import router as usuarios_router
+from src.endpoints.login import router as login_router
 
 from fastapi.exceptions import HTTPException, RequestValidationError
 from src.core.config import get_settings
@@ -36,39 +37,22 @@ from src.endpoints import (
     ventas,
 )
 
-app = FastAPI(
-    title="API Concesionario de Autos",
-    description="API para gestionar inventarios, ventas, compras y mantenimientos de un concesionario.",
-    version="1.0.0",
-)
-
-# Configuración básica de CORS (*)
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-
-# Root path
-@app.get("/")
-def read_root():
-    return {"message": "Bienvenido a la API del Concesionario de Autos"}
-
-
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     create_tables()
     yield
 
-
 app = FastAPI(
-    title="API Banco",
-    description="API con FastAPI, SQLAlchemy y PostgreSQL - Usuarios, Sucursales, Cuentas, Transacciones. Incluye validación de datos, manejo de errores unificado y estructuras de respuesta estándar.",
+    title="API Concesionario de Autos",
+    description="API para gestionar inventarios, ventas, compras y mantenimientos de un concesionario.",
+    version="1.0.0",
     lifespan=lifespan,
 )
+
+# Root path
+@app.get("/")
+def read_root():
+    return {"message": "Bienvenido a la API del Concesionario de Autos"}
 
 _settings = get_settings()
 app.add_middleware(
@@ -94,3 +78,4 @@ app.include_router(mantenimientos_router)
 app.include_router(detalle_ventas_router)
 app.include_router(sucursales_router)
 app.include_router(usuarios_router)
+app.include_router(login_router)

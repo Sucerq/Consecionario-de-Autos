@@ -15,8 +15,8 @@ load_dotenv()
 from src.database.config import Base, DATABASE_URL
 
 # Cargar todas las entidades para que Base.metadata las detecte
-import src.entities.auto
-import src.entities.cliente
+import src.entities.autos
+import src.entities.clientes
 import src.entities.compra
 import src.entities.detalle_venta
 import src.entities.empleado

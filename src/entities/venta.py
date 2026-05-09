@@ -20,10 +20,10 @@ class Venta(Base):
     fecha_edicion = Column(DateTime(timezone=True), onupdate=func.now())
 
     id_usuario_crea = Column(
-        UUID(as_uuid=True), ForeignKey("tbl_usuarios.id_Usuarios"), nullable=False
+        UUID(as_uuid=True), ForeignKey("tbl_usuario.id_Usuario"), nullable=False
     )
     id_usuario_edita = Column(
-        UUID(as_uuid=True), ForeignKey("tbl_usuarios.id_Usuarios"), nullable=True
+        UUID(as_uuid=True), ForeignKey("tbl_usuario.id_Usuario"), nullable=True
     )
 
     usuario_crea = relationship("Usuario", foreign_keys=[id_usuario_crea])
@@ -37,5 +37,5 @@ class Venta(Base):
         UUID(as_uuid=True), ForeignKey("tbl_Empleado.id_Empleado"), nullable=False
     )
     # --- Relationships ---
-    Cliente = relationship("Auto", foreign_keys=[id_Cliente])
+    Cliente = relationship("Cliente", foreign_keys=[id_Cliente])
     Empleado = relationship("Empleado", foreign_keys=[id_Empleado])
