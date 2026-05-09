@@ -9,4 +9,4 @@ from src.entities.sucursal import Sucursal
 from src.entities.venta import Venta
 
 __all__ = ["Usuario", "Auto","Cliente","Compra","Detalle_Venta","Empleado","Mantenimiento",
-           "Sucursal","Venta"] 
+           "Sucursal","Venta"]

@@ -12,12 +12,13 @@ class Compra(Base):
     __tablename__ = "tbl_Compra"
 
     id_Compra = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
-    fecha = Column(DateTime(timezone=True), server_default=func.now())
+    Fecha = Column(DateTime,default=True)
     Precio = Column(Numeric(10,2),nullable=False)
    
 
    
            # --- Auditoria ---
+    fecha_creacion = Column(DateTime(timezone=True), server_default=func.now())
     fecha_edicion = Column(DateTime(timezone=True), onupdate=func.now())
 
     id_usuario_crea = Column(

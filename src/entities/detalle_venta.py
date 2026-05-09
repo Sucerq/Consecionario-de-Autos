@@ -1,7 +1,6 @@
-# src/entities/detalle_venta.py
 import uuid
 
-from sqlalchemy import Column, DateTime, ForeignKey
+from sqlalchemy import Boolean, Column, DateTime, String,Numeric,ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
@@ -17,12 +16,11 @@ class Detalle_Venta(Base):
     fecha_creacion = Column(DateTime(timezone=True), server_default=func.now())
     fecha_edicion = Column(DateTime(timezone=True), onupdate=func.now())
 
-    # --- Auditoría (FK corregida: tbl_usuario.id_Usuario) ---
     id_usuario_crea = Column(
-        UUID(as_uuid=True), ForeignKey("tbl_usuario.id_Usuario"), nullable=False
+        UUID(as_uuid=True), ForeignKey("tbl_usuarios.id_Usuarios"), nullable=False
     )
     id_usuario_edita = Column(
-        UUID(as_uuid=True), ForeignKey("tbl_usuario.id_Usuario"), nullable=True
+        UUID(as_uuid=True), ForeignKey("tbl_usuarios.id_Usuarios"), nullable=True
     )
 
     usuario_crea = relationship("Usuario", foreign_keys=[id_usuario_crea])
@@ -35,7 +33,6 @@ class Detalle_Venta(Base):
     id_Auto = Column(
         UUID(as_uuid=True), ForeignKey("tbl_Auto.id_Auto"), nullable=False
     )
-
-    # --- Relationships (corregidos: cada uno apunta a su modelo real) ---
-    Venta = relationship("Venta", foreign_keys=[id_Venta])
-    Auto = relationship("Auto", foreign_keys=[id_Auto])
+    # --- Relationships ---
+    Venta = relationship("Auto", foreign_keys=[id_Venta])
+    Auto = relationship("Empleado", foreign_keys=[id_Auto])
