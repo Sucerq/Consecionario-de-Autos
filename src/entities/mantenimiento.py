@@ -12,14 +12,13 @@ class Mantenimiento(Base):
     __tablename__ = "tbl_Mantenimiento"
 
     id_Mantenimiento = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
-    Fecha = Column(DateTime,default=True)
+    Fecha = Column(DateTime(timezone=True), server_default=func.now())
     Tipo_Servicio = Column(String(50), nullable=False)
     Costo = Column(Numeric(10,2),nullable=False)
    
 
         # --- Auditoria ---
 
-    fecha_creacion = Column(DateTime(timezone=True), server_default=func.now())
     fecha_edicion = Column(DateTime(timezone=True), onupdate=func.now())
 
     id_usuario_crea = Column(

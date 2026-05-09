@@ -14,4 +14,4 @@ class Sucursal(Base):
     Nombre = Column(String(50), nullable=False)
     Telefono = Column(String(50),nullable=False)
     Direccion = Column(String(50),nullable=False)
-   
+    
