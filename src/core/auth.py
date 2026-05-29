@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session
 
 from src.core.config import Settings, get_settings
 from src.database.config import get_db
-from src.entities.Usuario import Usuario
+from src.entities.usuario import Usuario
 
 bearer_scheme = HTTPBearer(auto_error=False)
 

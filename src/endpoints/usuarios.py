@@ -10,6 +10,7 @@ from src.schemas.usuario_schema import UsuarioCreate, UsuarioUpdate, UsuarioResp
 
 router = APIRouter(prefix="/usuarios", tags=["Usuarios"])
 
+
 @router.get("/", response_model=list[UsuarioResponse])
 def listar_usuarios(db: Session = Depends(get_db)):
     """Obtiene la lista de todos los usuarios registrados.
@@ -21,6 +22,7 @@ def listar_usuarios(db: Session = Depends(get_db)):
         list[Usuario]: Listado de todos los modelos devueltos.
     """
     return db.query(Usuario).all()
+
 
 @router.get("/{usuario_id}", response_model=UsuarioResponse)
 def obtener_usuario(usuario_id: UUID, db: Session = Depends(get_db)):
@@ -41,6 +43,7 @@ def obtener_usuario(usuario_id: UUID, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
     return usuario
 
+
 @router.post("/", response_model=UsuarioResponse, status_code=status.HTTP_201_CREATED)
 def crear_usuario(dato: UsuarioCreate, db: Session = Depends(get_db)):
     """Registra y almacena un nuevo usuario validando credenciales únicas.
@@ -56,9 +59,13 @@ def crear_usuario(dato: UsuarioCreate, db: Session = Depends(get_db)):
         HTTPException: HTTP 400 Bad Request si el nombre o correo pre-existen.
     """
     if db.query(Usuario).filter(Usuario.email == dato.email).first():
-        raise HTTPException(status_code=400, detail="Este correo ya se encuentra en uso.")
+        raise HTTPException(
+            status_code=400, detail="Este correo ya se encuentra en uso."
+        )
     if db.query(Usuario).filter(Usuario.nombre_usuario == dato.nombre_usuario).first():
-        raise HTTPException(status_code=400, detail="El nombre de usuario no está disponible.")
+        raise HTTPException(
+            status_code=400, detail="El nombre de usuario no está disponible."
+        )
 
     # En un entorno real se cifraría la contraseña aquí.
     nuevo_usuario = Usuario(
@@ -67,15 +74,18 @@ def crear_usuario(dato: UsuarioCreate, db: Session = Depends(get_db)):
         email=dato.email,
         contraseña_hash=dato.contraseña_hash,
         telefono=dato.telefono,
-        activo=dato.activo
+        activo=dato.activo,
     )
     db.add(nuevo_usuario)
     db.commit()
     db.refresh(nuevo_usuario)
     return nuevo_usuario
 
+
 @router.put("/{usuario_id}", response_model=UsuarioResponse)
-def actualizar_usuario(usuario_id: UUID, dato: UsuarioUpdate, db: Session = Depends(get_db)):
+def actualizar_usuario(
+    usuario_id: UUID, dato: UsuarioUpdate, db: Session = Depends(get_db)
+):
     """Actualiza parcialmente los datos de un usuario.
 
     Args:
@@ -92,19 +102,20 @@ def actualizar_usuario(usuario_id: UUID, dato: UsuarioUpdate, db: Session = Depe
     usuario = db.query(Usuario).filter(Usuario.id_Usuario == usuario_id).first()
     if not usuario:
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
-    
+
     update_data = dato.model_dump(exclude_unset=True)
     for key, value in update_data.items():
         setattr(usuario, key, value)
-        
+
     db.commit()
     db.refresh(usuario)
     return usuario
 
+
 @router.delete("/{usuario_id}", status_code=status.HTTP_204_NO_CONTENT)
 def eliminar_usuario(usuario_id: UUID, db: Session = Depends(get_db)):
     """Elimina físicamente a un usuario de la base de datos.
-    
+
     Args:
         usuario_id (UUID): Llave posicional para la supresión de la base relacional.
         db (Session): Gestor relacional inyectado.
@@ -118,7 +129,7 @@ def eliminar_usuario(usuario_id: UUID, db: Session = Depends(get_db)):
     usuario = db.query(Usuario).filter(Usuario.id_Usuario == usuario_id).first()
     if not usuario:
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
-    
+
     db.delete(usuario)
     db.commit()
     return None

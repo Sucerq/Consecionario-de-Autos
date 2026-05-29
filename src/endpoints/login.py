@@ -5,10 +5,9 @@ from src.core.auth import create_access_token
 from src.core.config import get_settings
 from src.core.responses import success_response
 from src.database.config import get_db
-from src.entities.Usuario import Usuario
+from src.entities.usuario import Usuario
 from src.schemas.login_schema import Login
 from src.utils.security import verify_password
-
 
 router = APIRouter(prefix="/usuarios", tags=["usuarios"])
 
