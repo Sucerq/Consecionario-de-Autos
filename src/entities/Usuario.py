@@ -10,7 +10,9 @@ from src.database.config import Base
 class Usuario(Base):
     __tablename__ = "tbl_usuario"
 
-    id_Usuario = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
+    id_Usuario = Column(
+        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True
+    )
     nombre = Column(String(100), nullable=False)
     nombre_usuario = Column(String(50), unique=True, index=True, nullable=False)
     email = Column(String(150), unique=True, index=True, nullable=False)
