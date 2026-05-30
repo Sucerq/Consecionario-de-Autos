@@ -72,7 +72,7 @@ def crear_usuario(dato: UsuarioCreate, db: Session = Depends(get_db)):
         nombre=dato.nombre,
         nombre_usuario=dato.nombre_usuario,
         email=dato.email,
-        contraseña_hash=dato.contraseña_hash,
+        contraseña_hash=hash_password(dato.contraseña_hash),
         telefono=dato.telefono,
         activo=dato.activo,
     )
