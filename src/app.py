@@ -21,6 +21,7 @@ from src.endpoints.clientes import router as clientes_router
 from src.endpoints.detalle_ventas import router as detalle_ventas_router
 from src.endpoints.sucursales import router as sucursales_router
 from src.endpoints.usuarios import router as usuarios_router
+from fastapi import FastAPI, HTTPException, RequestValidationError
 
 
 @asynccontextmanager
