@@ -20,14 +20,12 @@ class CurrentUser(BaseModel):
 
     id_usuario: UUID
     nombre_usuario: str
-    rol: str
 
 
 def create_access_token(
     *,
     subject: UUID,
     nombre_usuario: str,
-    rol: str,
     settings: Settings,
 ) -> str:
     """Genera un JWT de acceso (HS256) con expiración configurada."""
@@ -36,7 +34,6 @@ def create_access_token(
     payload = {
         "sub": str(subject),
         "nombre_usuario": nombre_usuario,
-        "rol": rol,
         "iat": int(now.timestamp()),
         "exp": expire,
     }
@@ -76,7 +73,7 @@ async def get_current_user(
             detail="Token inválido o expirado",
         ) from None
 
-    user = db.query(Usuario).filter(Usuario.id_usuario == user_id).first()
+    user = db.query(Usuario).filter(Usuario.id_Usuario == user_id).first()
     if not user:
         raise HTTPException(status_code=401, detail="Usuario no encontrado")
     if not user.activo:
@@ -85,5 +82,4 @@ async def get_current_user(
     return CurrentUser(
         id_usuario=user.id_usuario,
         nombre_usuario=user.nombre_usuario,
-        rol=user.rol,
     )

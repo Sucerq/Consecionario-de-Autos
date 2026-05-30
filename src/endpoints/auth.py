@@ -27,8 +27,16 @@ def login(dato: Login, db: Session = Depends(get_db)):
     if not user.activo:
         raise HTTPException(status_code=403, detail="Usuario inactivo")
 
+    settings = get_settings()
+    access_token = create_access_token(
+        subject=str(user.id_Usuario),
+        nombre_usuario=user.nombre_usuario,
+        settings=settings,
+    )
     return {
         "success": True,
         "id_usuario": str(user.id_Usuario),
         "nombre_usuario": user.nombre_usuario,
+        "access_token": access_token,
+        "token_type": "bearer",
     }
