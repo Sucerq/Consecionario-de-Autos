@@ -3,6 +3,7 @@
 from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
+from src.utils.security import hash_password
 
 from src.database.config import get_db
 from src.entities.usuario import Usuario
