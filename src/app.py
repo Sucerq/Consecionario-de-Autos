@@ -23,6 +23,7 @@ from src.endpoints.sucursales import router as sucursales_router
 from src.endpoints.usuarios import router as usuarios_router
 from fastapi import FastAPI, HTTPException
 from fastapi.exceptions import RequestValidationError
+from src.endpoints.auth import router as auth_router
 
 
 @asynccontextmanager
@@ -71,3 +72,4 @@ app.include_router(clientes_router)
 app.include_router(detalle_ventas_router)
 app.include_router(sucursales_router)
 app.include_router(usuarios_router)
+app.include_router(auth_router)
