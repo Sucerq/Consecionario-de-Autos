@@ -38,5 +38,4 @@ class Venta(Base):
         UUID(as_uuid=True), ForeignKey("tbl_Empleado.id_Empleado"), nullable=False
     )
     # --- Relationships ---
-    Cliente = relationship("Auto", foreign_keys=[id_Cliente])
-    Empleado = relationship("Empleado", foreign_keys=[id_Empleado])
+    Cliente = relationship("Cliente", foreign_keys=[id_Cliente])

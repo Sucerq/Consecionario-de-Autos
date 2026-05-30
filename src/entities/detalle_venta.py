@@ -34,5 +34,5 @@ class Detalle_Venta(Base):
     )
     id_Auto = Column(UUID(as_uuid=True), ForeignKey("tbl_Auto.id_Auto"), nullable=False)
     # --- Relationships ---
-    Venta = relationship("Auto", foreign_keys=[id_Venta])
-    Auto = relationship("Empleado", foreign_keys=[id_Auto])
+    Venta = relationship("Venta", foreign_keys=[id_Venta])
+    Auto = relationship("Auto", foreign_keys=[id_Auto])
