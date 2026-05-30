@@ -21,6 +21,8 @@ def login(dato: Login, db: Session = Depends(get_db)):
     if not user:
         raise HTTPException(status_code=401, detail="Usuario no encontrado")
 
+    print(user.contraseña_hash)
+
     if not verify_password(dato.contraseña, user.contraseña_hash):
         raise HTTPException(status_code=401, detail="Contraseña incorrecta")
 
